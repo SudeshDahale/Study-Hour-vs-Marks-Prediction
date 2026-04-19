@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Predictive Analytics — Study Hours vs Exam Score</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════════ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="badge">📊 ML Predictive Analytics App</div>
+    <h1>Study Hours <span class="accent">→</span> Exam Score Predictor</h1>
+    <p class="subtitle">
+      Linear &amp; Polynomial Regression trained on 500 real-world student data points
+    </p>
+    <div class="api-status" id="api-status">
+      <span class="dot dot--checking"></span> Connecting to API…
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════════════ -->
+<main class="container">
+
+  <!-- ── Model Performance Cards ──────────────────── -->
+  <section class="section">
+    <h2 class="section-title">Model Performance Metrics</h2>
+    <div class="cards-row">
+
+      <div class="card card--blue">
+        <div class="card-icon">📈</div>
+        <h3>Linear Regression</h3>
+        <div class="metric-grid">
+          <div class="metric">
+            <span class="metric-val" id="lin-r2">—</span>
+            <span class="metric-lbl">R² Score</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val" id="lin-mse">—</span>
+            <span class="metric-lbl">MSE</span>
+          </div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill progress-fill--blue" id="lin-bar" style="width:0%"></div>
+        </div>
+        <p class="progress-label" id="lin-bar-label">Loading…</p>
+      </div>
+
+      <div class="card card--purple">
+        <div class="card-icon">🔮</div>
+        <h3>Polynomial Regression <span class="deg-badge">deg = 2</span></h3>
+        <div class="metric-grid">
+          <div class="metric">
+            <span class="metric-val" id="poly-r2">—</span>
+            <span class="metric-lbl">R² Score</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val" id="poly-mse">—</span>
+            <span class="metric-lbl">MSE</span>
+          </div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill progress-fill--purple" id="poly-bar" style="width:0%"></div>
+        </div>
+        <p class="progress-label" id="poly-bar-label">Loading…</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Prediction Panel ──────────────────────────── -->
+  <section class="section">
+    <h2 class="section-title">Make a Prediction</h2>
+
+    <div class="predict-panel">
+
+      <!-- Left: Controls -->
+      <div class="predict-form">
+
+        <label class="form-label" for="hours-slider">
+          Study Hours per Week &nbsp;
+          <span class="hours-display" id="hours-display">5.0</span>
+        </label>
+        <input
+          type="range"
+          id="hours-slider"
+          class="slider"
+          min="0" max="10" step="0.1" value="5"
+        />
+        <div class="slider-ticks">
+          <span>0 hrs</span><span>2.5</span><span>5 hrs</span><span>7.5</span><span>10 hrs</span>
+        </div>
+
+        <p class="form-label" style="margin-top:22px;">Select Model</p>
+        <div class="model-toggle">
+          <button class="toggle-btn active" id="btn-linear"
+                  onclick="selectModel('linear')">📈 Linear</button>
+          <button class="toggle-btn" id="btn-poly"
+                  onclick="selectModel('polynomial')">🔮 Polynomial</button>
+        </div>
+
+        <button class="predict-btn" id="predict-btn" onclick="runPrediction()">
+          🎯 Predict Score
+        </button>
+
+      </div>
+
+      <!-- Right: Result -->
+      <div class="predict-result" id="result-box">
+        <div class="result-placeholder">
+          <span class="placeholder-icon">🎯</span>
+          <p>Set hours &amp; click <strong>Predict Score</strong></p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Charts ─────────────────────────────────────── -->
+  <section class="section">
+    <h2 class="section-title">Regression Visualisations</h2>
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3>📈 Linear Regression</h3>
+        <img src="images/plot_linear.png" alt="Linear Regression Plot" class="chart-img" />
+      </div>
+      <div class="chart-card">
+        <h3>🔮 Polynomial Regression (deg=2)</h3>
+        <img src="images/plot_poly.png" alt="Polynomial Regression Plot" class="chart-img" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Dataset Info ───────────────────────────────── -->
+  <section class="section">
+    <h2 class="section-title">Dataset Overview</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <span class="info-num">500</span>
+        <span class="info-lbl">Total Data Points</span>
+      </div>
+      <div class="info-card">
+        <span class="info-num">2</span>
+        <span class="info-lbl">Features</span>
+      </div>
+      <div class="info-card">
+        <span class="info-num">0 – 10</span>
+        <span class="info-lbl">Study Hrs Range</span>
+      </div>
+      <div class="info-card">
+        <span class="info-num">27 – 107</span>
+        <span class="info-lbl">Score Range (%)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── How It Works ───────────────────────────────── -->
+  <section class="section">
+    <h2 class="section-title">How It Works</h2>
+    <div class="steps-row">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h4>Data Collection</h4>
+        <p>500 student records with weekly study hours and corresponding exam scores.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h4>Model Training</h4>
+        <p>scikit-learn trains Linear &amp; Polynomial (deg=2) Regression on the full dataset.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h4>REST API</h4>
+        <p>Flask exposes a <code>/predict</code> endpoint that returns the predicted score as JSON.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h4>Prediction</h4>
+        <p>Enter study hours → the model returns your predicted exam score instantly.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════ -->
+<footer class="footer">
+  <p>
+    Predictive Analytics Application &nbsp;|&nbsp;
+    Linear &amp; Polynomial Regression &nbsp;|&nbsp;
+    scikit-learn · Flask · HTML · CSS · JavaScript
+  </p>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
