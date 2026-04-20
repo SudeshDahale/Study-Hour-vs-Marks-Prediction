@@ -3,203 +3,353 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Predictive Analytics — Study Hours vs Exam Score</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <title>ML Analytics Dashboard</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
+
+    body {
+      background: #0b1220;
+      color: #e5e7eb;
+      display: flex;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background: #0f172a;
+      height: 100vh;
+      padding: 24px;
+      border-right: 1px solid rgba(255,255,255,0.05);
+      position: fixed;
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      color: #60a5fa;
+    }
+
+    .nav-item {
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      color: #94a3b8;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .nav-item:hover {
+      background: rgba(96,165,250,0.1);
+      color: white;
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 260px;
+      width: 100%;
+      padding: 30px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .status {
+      font-size: 12px;
+      padding: 6px 10px;
+      background: rgba(34,197,94,0.1);
+      color: #22c55e;
+      border-radius: 20px;
+    }
+
+    /* GRID */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .card h3 {
+      font-size: 14px;
+      margin-bottom: 15px;
+      color: #cbd5e1;
+    }
+
+    /* METRICS */
+    .metrics {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .metric-value {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    /* PROGRESS */
+    .progress {
+      height: 6px;
+      background: #1e293b;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .fill-blue { background: #3b82f6; height: 100%; width: 0%; }
+    .fill-purple { background: #a855f7; height: 100%; width: 0%; }
+
+    /* PREDICT SECTION */
+    .predict {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .slider {
+      width: 100%;
+      margin: 15px 0;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #1e293b;
+      color: #cbd5e1;
+      transition: 0.2s;
+    }
+
+    button.active {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .predict-btn {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 10px;
+      background: linear-gradient(135deg,#3b82f6,#6366f1);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* RESULT */
+    .result {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0b1220;
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 12px;
+      font-size: 18px;
+      color: #94a3b8;
+    }
+
+    /* CHARTS */
+    .charts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .chart-card img {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* INFO */
+    .info {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .info-box {
+      background: #0f172a;
+      padding: 14px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .info-num {
+      font-size: 18px;
+      font-weight: 600;
+      color: #60a5fa;
+    }
+
+    /* FOOTER */
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .grid-2, .predict, .charts, .info { grid-template-columns: 1fr; }
+    }
+
+  </style>
 </head>
+
 <body>
 
-<!-- ══════════════════════════════════════════════
-     HEADER
-══════════════════════════════════════════════════ -->
-<header class="hero">
-  <div class="hero-inner">
-    <div class="badge">📊 ML Predictive Analytics App</div>
-    <h1>Study Hours <span class="accent">→</span> Exam Score Predictor</h1>
-    <p class="subtitle">
-      Linear &amp; Polynomial Regression trained on 500 real-world student data points
-    </p>
-    <div class="api-status" id="api-status">
-      <span class="dot dot--checking"></span> Connecting to API…
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">📊 ML Dashboard</div>
+  <div class="nav-item">Overview</div>
+  <div class="nav-item">Prediction</div>
+  <div class="nav-item">Models</div>
+  <div class="nav-item">Graphs</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="header">
+    <div class="title">Study Hours → Score Predictor</div>
+    <div class="status" id="api-status">API Connected</div>
+  </div>
+
+  <!-- MODEL CARDS -->
+  <div class="grid-2">
+
+    <div class="card">
+      <h3>Linear Regression</h3>
+
+      <div class="metrics">
+        <div>
+          <div class="metric-value" id="lin-r2">—</div>
+          <div class="metric-label">R² Score</div>
+        </div>
+        <div>
+          <div class="metric-value" id="lin-mse">—</div>
+          <div class="metric-label">MSE</div>
+        </div>
+      </div>
+
+      <div class="progress"><div class="fill-blue" id="lin-bar"></div></div>
+    </div>
+
+    <div class="card">
+      <h3>Polynomial Regression</h3>
+
+      <div class="metrics">
+        <div>
+          <div class="metric-value" id="poly-r2">—</div>
+          <div class="metric-label">R² Score</div>
+        </div>
+        <div>
+          <div class="metric-value" id="poly-mse">—</div>
+          <div class="metric-label">MSE</div>
+        </div>
+      </div>
+
+      <div class="progress"><div class="fill-purple" id="poly-bar"></div></div>
+    </div>
+
+  </div>
+
+  <!-- PREDICT -->
+  <div class="predict">
+
+    <div class="card">
+      <h3>Make Prediction</h3>
+
+      <label>Study Hours: <span id="hours-display">5.0</span></label>
+      <input type="range" min="0" max="10" step="0.1" value="5" id="hours-slider" class="slider"/>
+
+      <div class="btn-group">
+        <button class="active" id="btn-linear" onclick="selectModel('linear')">Linear</button>
+        <button id="btn-poly" onclick="selectModel('polynomial')">Polynomial</button>
+      </div>
+
+      <button class="predict-btn" id="predict-btn" onclick="runPrediction()">
+        Predict Score
+      </button>
+    </div>
+
+    <div class="card result" id="result-box">
+      Prediction will appear here
+    </div>
+
+  </div>
+
+  <!-- CHARTS -->
+  <div class="charts">
+    <div class="card chart-card">
+      <h3>Linear Regression</h3>
+      <img src="images/plot_linear.png"/>
+    </div>
+
+    <div class="card chart-card">
+      <h3>Polynomial Regression</h3>
+      <img src="images/plot_poly.png"/>
     </div>
   </div>
-</header>
 
-<!-- ══════════════════════════════════════════════
-     MAIN
-══════════════════════════════════════════════════ -->
-<main class="container">
+  <!-- DATA -->
+  <div class="info">
+    <div class="info-box"><div class="info-num">500</div>Data Points</div>
+    <div class="info-box"><div class="info-num">2</div>Features</div>
+    <div class="info-box"><div class="info-num">0–10</div>Hours Range</div>
+    <div class="info-box"><div class="info-num">27–107</div>Score Range</div>
+  </div>
 
-  <!-- ── Model Performance Cards ──────────────────── -->
-  <section class="section">
-    <h2 class="section-title">Model Performance Metrics</h2>
-    <div class="cards-row">
+  <div class="footer">
+    ML Regression Project • FastAPI / Flask • scikit-learn
+  </div>
 
-      <div class="card card--blue">
-        <div class="card-icon">📈</div>
-        <h3>Linear Regression</h3>
-        <div class="metric-grid">
-          <div class="metric">
-            <span class="metric-val" id="lin-r2">—</span>
-            <span class="metric-lbl">R² Score</span>
-          </div>
-          <div class="metric">
-            <span class="metric-val" id="lin-mse">—</span>
-            <span class="metric-lbl">MSE</span>
-          </div>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill progress-fill--blue" id="lin-bar" style="width:0%"></div>
-        </div>
-        <p class="progress-label" id="lin-bar-label">Loading…</p>
-      </div>
-
-      <div class="card card--purple">
-        <div class="card-icon">🔮</div>
-        <h3>Polynomial Regression <span class="deg-badge">deg = 2</span></h3>
-        <div class="metric-grid">
-          <div class="metric">
-            <span class="metric-val" id="poly-r2">—</span>
-            <span class="metric-lbl">R² Score</span>
-          </div>
-          <div class="metric">
-            <span class="metric-val" id="poly-mse">—</span>
-            <span class="metric-lbl">MSE</span>
-          </div>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill progress-fill--purple" id="poly-bar" style="width:0%"></div>
-        </div>
-        <p class="progress-label" id="poly-bar-label">Loading…</p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ── Prediction Panel ──────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">Make a Prediction</h2>
-
-    <div class="predict-panel">
-
-      <!-- Left: Controls -->
-      <div class="predict-form">
-
-        <label class="form-label" for="hours-slider">
-          Study Hours per Week &nbsp;
-          <span class="hours-display" id="hours-display">5.0</span>
-        </label>
-        <input
-          type="range"
-          id="hours-slider"
-          class="slider"
-          min="0" max="10" step="0.1" value="5"
-        />
-        <div class="slider-ticks">
-          <span>0 hrs</span><span>2.5</span><span>5 hrs</span><span>7.5</span><span>10 hrs</span>
-        </div>
-
-        <p class="form-label" style="margin-top:22px;">Select Model</p>
-        <div class="model-toggle">
-          <button class="toggle-btn active" id="btn-linear"
-                  onclick="selectModel('linear')">📈 Linear</button>
-          <button class="toggle-btn" id="btn-poly"
-                  onclick="selectModel('polynomial')">🔮 Polynomial</button>
-        </div>
-
-        <button class="predict-btn" id="predict-btn" onclick="runPrediction()">
-          🎯 Predict Score
-        </button>
-
-      </div>
-
-      <!-- Right: Result -->
-      <div class="predict-result" id="result-box">
-        <div class="result-placeholder">
-          <span class="placeholder-icon">🎯</span>
-          <p>Set hours &amp; click <strong>Predict Score</strong></p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ── Charts ─────────────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">Regression Visualisations</h2>
-    <div class="charts-row">
-      <div class="chart-card">
-        <h3>📈 Linear Regression</h3>
-        <img src="images/plot_linear.png" alt="Linear Regression Plot" class="chart-img" />
-      </div>
-      <div class="chart-card">
-        <h3>🔮 Polynomial Regression (deg=2)</h3>
-        <img src="images/plot_poly.png" alt="Polynomial Regression Plot" class="chart-img" />
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Dataset Info ───────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">Dataset Overview</h2>
-    <div class="info-grid">
-      <div class="info-card">
-        <span class="info-num">500</span>
-        <span class="info-lbl">Total Data Points</span>
-      </div>
-      <div class="info-card">
-        <span class="info-num">2</span>
-        <span class="info-lbl">Features</span>
-      </div>
-      <div class="info-card">
-        <span class="info-num">0 – 10</span>
-        <span class="info-lbl">Study Hrs Range</span>
-      </div>
-      <div class="info-card">
-        <span class="info-num">27 – 107</span>
-        <span class="info-lbl">Score Range (%)</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── How It Works ───────────────────────────────── -->
-  <section class="section">
-    <h2 class="section-title">How It Works</h2>
-    <div class="steps-row">
-      <div class="step-card">
-        <div class="step-num">1</div>
-        <h4>Data Collection</h4>
-        <p>500 student records with weekly study hours and corresponding exam scores.</p>
-      </div>
-      <div class="step-card">
-        <div class="step-num">2</div>
-        <h4>Model Training</h4>
-        <p>scikit-learn trains Linear &amp; Polynomial (deg=2) Regression on the full dataset.</p>
-      </div>
-      <div class="step-card">
-        <div class="step-num">3</div>
-        <h4>REST API</h4>
-        <p>Flask exposes a <code>/predict</code> endpoint that returns the predicted score as JSON.</p>
-      </div>
-      <div class="step-card">
-        <div class="step-num">4</div>
-        <h4>Prediction</h4>
-        <p>Enter study hours → the model returns your predicted exam score instantly.</p>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<!-- ══════════════════════════════════════════════
-     FOOTER
-══════════════════════════════════════════════════ -->
-<footer class="footer">
-  <p>
-    Predictive Analytics Application &nbsp;|&nbsp;
-    Linear &amp; Polynomial Regression &nbsp;|&nbsp;
-    scikit-learn · Flask · HTML · CSS · JavaScript
-  </p>
-</footer>
+</div>
 
 <script src="js/main.js"></script>
 </body>
